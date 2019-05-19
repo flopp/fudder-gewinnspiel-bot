@@ -1,33 +1,17 @@
 #!/usr/bin/env python3
 
-import feedparser
-import os
-import re
-import requests
-import time
-import urllib
+import argparse
+from fudder import Fudder
 
-feed_url = 'http://fudder.de/index.html.rss'
-feed_file = 'feed.rss'
+def main():
+    args_parser = argparse.ArgumentParser()
+    args_parser.add_argument('-u', '--username', dest='username', metavar='USERNAME', type=str, required=True)
+    args_parser.add_argument('-p', '--password', dest='password', metavar='PASSWORD', type=str, required=True)
+    args_parser.add_argument('-d', '--data-dir', dest='data_dir', metavar='DIR', type=str, default='.data')
+    args = args_parser.parse_args()
 
-def get_url(url, file_name):
-    if os.path.exists(file_name):
-        with open(file_name, 'r') as f:
-            return f.read()
-    print(f'fetching {url} ...')
-    time.sleep(1)
-    r = requests.get(url, allow_redirects=True)
-    with open(file_name, 'w') as f:
-        f.write(r.text)
-    return r.text
+    f = Fudder(args.username, args.password, args.data_dir)
+    f.get_new_gewinnspiele()
 
-feed_data = get_url(feed_url, feed_file)
-feed = feedparser.parse(feed_data)
-for entry in feed.entries:
-    entry_id = re.sub('[^0-9a-zA-Z]+', '_', entry['id'])
-    entry_url = entry['link']
-    entry_file = f'entry_{entry_id}.html'
-    entry_data = get_url(entry_url, entry_file)
-    for line in entry_data.split('\n'):
-        if 'gewinnen@fudder.de' in line:
-            print(line)
+if __name__ == '__main__':
+    main()
