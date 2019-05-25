@@ -23,6 +23,7 @@ class Fudder:
             entry_data = self.get_article(entry['link'], entry_file)
             for line in entry_data.split('\n'):
                 if 'gewinnen@fudder.de' in line:
+                    print(entry['url'])
                     print(entry['title'])
                     print(entry['published'])
                     print(line)
@@ -82,7 +83,7 @@ class Fudder:
         if (not force_download) and (file_name is not None) and os.path.exists(file_name):
             with open(file_name, 'r') as f:
                 return f.read()
-        print(f'fetching {url} ...')
+        # print(f'fetching {url} ...')
         time.sleep(1)
         if cookie:
             r = requests.get(url, allow_redirects=True, cookies={'session_cookie': cookie})
