@@ -23,7 +23,7 @@ class Fudder:
             entry_data = self.get_article(entry['link'], entry_file)
             for line in entry_data.split('\n'):
                 if 'gewinnen@fudder.de' in line:
-                    print(entry['url'])
+                    print(entry['link'])
                     print(entry['title'])
                     print(entry['published'])
                     print(line)
